@@ -1,0 +1,24 @@
+{
+  "name": "vibe-flix",
+  "version": "1.0.0",
+  "description": "Project Dummy Aplikasi Streaming video",
+  "main": "\u001b[D\u001b[D\u001b[D\u001b[D\u001b[C\u001b[C\u001b[C\u001b[C",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ZahidMahfudz/Vibe-Flix.git"
+  },
+  "author": "Luqman Adi Wibowo, Zahid Muhammad Mahfudz",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ZahidMahfudz/Vibe-Flix/issues"
+  },
+  "homepage": "https://github.com/ZahidMahfudz/Vibe-Flix#readme",
+  "dependencies": {
+    "@prisma/client": "^6.15.0",
+    "express": "^5.1.0",
+    "prisma": "^6.15.0"
+  }
+}
