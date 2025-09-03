@@ -1,17 +1,15 @@
-const express = require('express');
-const dotenv = require('dotenv');
-const { PrismaClient } = require('@prisma/client');
+//index.js adalah titik masuk utama aplikasi
+//mengatur server express dan memulai server
 
-dotenv.config();
+const dotenv = require("dotenv"); //env variable
+dotenv.config(); //load env variable dari .env file
 
-const app = express();
+const app = require("./src/app"); //import app dari src/app.js
+
+// Start the server
+
 const port = process.env.PORT || 3000;
-const prisma = new PrismaClient();
 
 app.listen(port, () => {
-  console.log(`Server is running on http://localhost:${port}`);
-});
-
-app.get('/', (req, res) => {
-  res.send('hello Vibe-Flix!');
+  console.log(`🚀 Server running at http://localhost:${port}`);
 });
