@@ -1,9 +1,10 @@
 //service digunakan untuk logika bisnis
 //menggunakan prisma client untuk berinteraksi dengan database
 
-const { PrismaClient } = require("@prisma/client");
+// const { PrismaClient } = require("@prisma/client");
+const { prisma } = require("../config/db");
 const bcrypt = require("bcrypt");
-const prisma = new PrismaClient();
+// const prisma = new PrismaClient();
 
 const createUser = async ({ name, email, role, password }) => {
   const hashedPassword = await bcrypt.hash(password, 10);

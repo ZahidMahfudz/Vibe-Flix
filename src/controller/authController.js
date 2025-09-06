@@ -19,12 +19,17 @@ async function login(req, res) {
 
 async function register(req, res) {
   try {
-    const { email, password, role } = req.body;
-    const user = await authService.register(email, password, role);
+    const { name, email, password, role } = req.body;
+    const user = await authService.register(name, email, password, role);
 
     res.status(201).json({
       message: "Registrasi berhasil",
-      user: { id: user.id, email: user.email, role: user.role },
+      user: { 
+        id: user.id,
+        name: user.name, 
+        email: user.email, 
+        role: user.role },
+      redirect : "/login",
     });
   } catch (error) {
     res.status(400).json({ message: error.message });
