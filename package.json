@@ -4,6 +4,9 @@
   "description": "Project Dummy Aplikasi Streaming video",
   "main": "\u001b[D\u001b[D\u001b[D\u001b[D\u001b[C\u001b[C\u001b[C\u001b[C",
   "scripts": {
+    "dev": "nodemon index.js",
+    "start": "node index.js",
+    "build" : "prisma generate",
     "test": "echo \"Error: no test specified\" && exit 1",
     "seed": "node prisma/seed.js"
   },
