@@ -5,9 +5,13 @@ app.use(express.json()); //menggunakan middleware untuk parsing JSON
 
 // Import routes
 const userRoutes = require("./routes/userRoutes");
+const authRoutes = require("./routes/authRoutes");
 
-//routes
+//routes 
 app.use("/users", userRoutes); //menggunakan userRoutes untuk rute /users
+
+// Routes login
+app.use("/auth", authRoutes);
 
 app.get('/', (req, res) => {
   res.send('hello Vibe-Flix!');

@@ -1,12 +1,15 @@
 //service digunakan untuk logika bisnis
 //menggunakan prisma client untuk berinteraksi dengan database
 
-const { PrismaClient } = require("@prisma/client");
-const prisma = new PrismaClient();
+// const { PrismaClient } = require("@prisma/client");
+const { prisma } = require("../config/db");
+const bcrypt = require("bcrypt");
+// const prisma = new PrismaClient();
 
-const createUser = async ({ name, email, password }) => {
+const createUser = async ({ name, email, role, password }) => {
+  const hashedPassword = await bcrypt.hash(password, 10);
   return await prisma.user.create({
-    data: { name, email, password },
+    data: { name, email, role, password : hashedPassword},
   });
 };
 
@@ -21,9 +24,18 @@ const getUserById = async (id) => {
 };
 
 const updateUser = async (id, { name, email, password }) => {
+  const hashedPassword = await bcrypt.hash(password, 10);
+  
+  if(!hashedPassword){
+    return await prisma.user.update({
+      where: { id: parseInt(id) },
+      data: { name, email },
+    });
+  }
+
   return await prisma.user.update({
     where: { id: parseInt(id) },
-    data: { name, email, password },
+    data: { name, email, password : hashedPassword },
   });
 };
 
