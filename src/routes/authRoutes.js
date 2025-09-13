@@ -4,7 +4,7 @@ const authController = require("../controller/authController");
 const authenticate = require("../middleware/authMiddleware")
 const validator = require("../validator/authValidator");
 const validate = require("../middleware/validate");
-const logger = require('../middleware/loggerMiddleware');
+const logger = require('../middleware/loggerMiddleware'); //dipakai untuk logging request hanya untuk pada file ini saja
 
 // Auth
 router.post("/login", logger.requestLogger , validator.loginValidator, validate, authController.login);
