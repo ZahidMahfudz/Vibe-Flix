@@ -2,6 +2,7 @@ const {prisma} = require("../config/db");
 const bcrypt = require("bcrypt");
 const { generateToken } = require("../utils/jwt");
 const logger = require('../utils/logger');
+const { generateUserId } = require("../utils/idGenerator");
 
 
 async function login(email, password) {
@@ -39,14 +40,23 @@ async function register(name, email, password, role = "USER") {
     throw new Error("Email sudah terdaftar");
   }
 
+  const newIdUser = generateUserId();
+  logger.debug(`berhasil generate id user baru : ${newIdUser}`)
+
   const hashedPassword = await bcrypt.hash(password, 10);
   logger.debug(`${password} berhasil di-hashing menjadi ${hashedPassword}`)
 
   logger.debug(`menjalankan prisma.user.create`)
   const user = await prisma.user.create({
-    data: { name, email, password: hashedPassword, role },
+    data: { 
+      id_user : newIdUser,
+      name, 
+      email, 
+      password: hashedPassword, 
+      role 
+    },
   });
-  logger.debug(`berhasil menambahkan id : ${user.id}, name : ${user.name}, email : ${user.email}, password : ${user.password}, role : ${user.role} ke database user`)
+  logger.debug(`berhasil menambahkan id : ${user.id_user}, name : ${user.name}, email : ${user.email}, password : ${user.password}, role : ${user.role} ke database user`)
 
   return user;
 }

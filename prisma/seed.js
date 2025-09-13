@@ -1,5 +1,6 @@
 const { PrismaClient } = require('@prisma/client')
 const bcrypt = require('bcrypt')
+const { generateUserId } = require('../src/utils/idGenerator')
 
 const prisma = new PrismaClient()
 
@@ -13,6 +14,7 @@ async function main() {
   // Tambah admin
   await prisma.user.create({
     data: {
+      id_user : generateUserId(),
       name : 'Admin',
       email: 'admin@example.com',
       password: passwordAdmin,
