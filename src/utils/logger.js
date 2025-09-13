@@ -1,7 +1,9 @@
 const {createLogger, transports, format} = require('winston');
 
+const env = process.env.NODE_ENV || 'development';
+
 const logger = createLogger({
-    level: 'info',
+    level: env === 'development' ? 'debug' : 'info',
     format: format.combine(
         format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
         format.printf(info => `[${info.timestamp}] [Level : ${info.level}] [Pesan : ${info.message}]`)
