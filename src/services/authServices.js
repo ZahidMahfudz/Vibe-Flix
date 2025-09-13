@@ -33,11 +33,20 @@ async function login(email, password) {
 }
 
 async function register(name, email, password, role = "USER") {
-  const hashedPassword = await bcrypt.hash(password, 10);
+  const existingUser = await prisma.user.findUnique({ where: { email } });
+  if (existingUser) {
+    logger.debug(`email ${email} sudah terdaftar`);
+    throw new Error("Email sudah terdaftar");
+  }
 
+  const hashedPassword = await bcrypt.hash(password, 10);
+  logger.debug(`${password} berhasil di-hashing menjadi ${hashedPassword}`)
+
+  logger.debug(`menjalankan prisma.user.create`)
   const user = await prisma.user.create({
     data: { name, email, password: hashedPassword, role },
   });
+  logger.debug(`berhasil menambahkan id : ${user.id}, name : ${user.name}, email : ${user.email}, password : ${user.password}, role : ${user.role} ke database user`)
 
   return user;
 }

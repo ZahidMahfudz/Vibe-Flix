@@ -14,7 +14,7 @@ async function login(req, res) {
     logger.info(`User ${user.email} berhasil melakukan login`);
   } catch (error) {
     res.status(401).json({ message: error.message });
-    logger.error(`Login gagal: ${error.message}`);
+    logger.info(`Login gagal: ${error.message}`);
   }
 }
 
@@ -32,8 +32,10 @@ async function register(req, res) {
         role: user.role },
       redirect : "/login",
     });
+    logger.info(`Register user ${user.name} dengan email ${user.email} berhasil`);
   } catch (error) {
     res.status(400).json({ message: error.message });
+    logger.info(`Register gagal: ${error.message}`);
   }
 }
 

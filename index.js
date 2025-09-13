@@ -11,9 +11,10 @@ if (process.env.NODE_ENV === "production") {
 }
 
 logger.info(`Environment: ${process.env.NODE_ENV === "production" ? "Production" : "Development"}`);
-logger.info(`Using config file: ${process.env.NODE_ENV === "production" ? ".env.production" : ".env.dev"}`);
+logger.info(`Using config file: ${process.env.NODE_ENV === "production" ? ".env.production" : ".env"}`);
 connectDB();
 
+//load app
 const app = require("./src/app");
 
 
