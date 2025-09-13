@@ -9,6 +9,7 @@
     "build": "prisma generate",
     "postinstall": "prisma generate",
     "seed": "node prisma/seed.js",
+    "migrate:prod": "prisma migrate deploy --schema=./prisma/schema.prisma",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
