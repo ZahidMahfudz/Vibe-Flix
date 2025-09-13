@@ -1,21 +1,21 @@
 const express = require('express'); //menginisialisasi express
-const logger = require('./utils/logger'); //mengimpor logger
+// const {logger} = require('./utils/logger'); //mengimpor logger
+const {requestLogger} = require('./middleware/loggerMiddleware');
 
 const app = express(); //mengisialisasi app
 app.use(express.json()); //menggunakan middleware untuk parsing JSON
+app.use(express.urlencoded({ extended: true })); //menggunakan middleware untuk parsing URL-encoded
+
 
 // Import routes
 const userRoutes = require("./routes/userRoutes");
 const authRoutes = require("./routes/authRoutes");
 
 //routes 
-app.use("/users", userRoutes); //menggunakan userRoutes untuk rute /users
-
-// Routes login
+app.use("/users", userRoutes); 
 app.use("/auth", authRoutes);
 
-app.get('/', (req, res) => {
-  logger.info(`Request ke '${req.url}' dengan method : ${req.method}`); //log setiap request ke homepage
+app.get('/', requestLogger,   (req, res) => {
   res.send('hello Vibe-Flix!');
 });
 
