@@ -2,7 +2,6 @@ const logger = require('../utils/logger')
 const authService = require("../services/authServices");
 
 async function login(req, res) {
-  logger.info(`Request ke '${req.url}' dengan method : ${req.method}`)
   try {
     const { email, password } = req.body;
     const { token, user } = await authService.login(email, password);
@@ -12,10 +11,10 @@ async function login(req, res) {
       token,
       user: { id: user.id, email: user.email, role: user.role },
     });
-    logger.info(`User ${user.email} logged in successfully.`);
+    logger.info(`User ${user.email} berhasil melakukan login`);
   } catch (error) {
     res.status(401).json({ message: error.message });
-    logger.info(`Failed login attempt: ${error.message}`);
+    logger.error(`Login gagal: ${error.message}`);
   }
 }
 

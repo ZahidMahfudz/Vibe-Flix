@@ -1,4 +1,5 @@
 const { body } = require("express-validator");
+const logger = require('../utils/logger');
 
 const registerValidator = [
   body("name")
@@ -19,10 +20,12 @@ const registerValidator = [
 const loginValidator = [
   body("email")
     .isEmail()
-    .withMessage("Email tidak valid"),
+    .withMessage("Email tidak valid")
+    .custom((value)=>{logger.debug(`Melakukan validasi email ${value}`); return true}),
   body("password")
     .notEmpty()
-    .withMessage("Password wajib diisi"),
+    .withMessage("Password wajib diisi")
+    .custom((value)=>{logger.debug(`Melakukan validasi password ${value}`); return true}),
 ];
 
 module.exports = { registerValidator, loginValidator };
