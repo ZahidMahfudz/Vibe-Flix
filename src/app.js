@@ -1,4 +1,5 @@
 const express = require('express'); //menginisialisasi express
+const logger = require('./utils/logger'); //mengimpor logger
 
 const app = express(); //mengisialisasi app
 app.use(express.json()); //menggunakan middleware untuk parsing JSON
@@ -14,6 +15,7 @@ app.use("/users", userRoutes); //menggunakan userRoutes untuk rute /users
 app.use("/auth", authRoutes);
 
 app.get('/', (req, res) => {
+  logger.info(`Request ke '${req.url}' dengan method : ${req.method}`); //log setiap request ke homepage
   res.send('hello Vibe-Flix!');
 });
 

@@ -1,19 +1,21 @@
+const logger = require('../utils/logger')
 const authService = require("../services/authServices");
 
 async function login(req, res) {
+  logger.info(`Request ke '${req.url}' dengan method : ${req.method}`)
   try {
     const { email, password } = req.body;
     const { token, user } = await authService.login(email, password);
-
-    
 
     res.json({
       message: "Login berhasil",
       token,
       user: { id: user.id, email: user.email, role: user.role },
     });
+    logger.info(`User ${user.email} logged in successfully.`);
   } catch (error) {
     res.status(401).json({ message: error.message });
+    logger.info(`Failed login attempt: ${error.message}`);
   }
 }
 
