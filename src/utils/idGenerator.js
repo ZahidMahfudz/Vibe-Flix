@@ -1,5 +1,5 @@
-import { v4 as uuidv4 } from 'uuid';
-
-export function generateUserId() {
-    return `usr-${uuidv4()}`;
+const { v4: uuidv4 } = require('uuid');
+function generateUserId() {
+  return `usr-${uuidv4()}`;
 }
+module.exports = { generateUserId };
