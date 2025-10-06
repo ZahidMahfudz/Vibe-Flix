@@ -1,10 +1,12 @@
 const express = require('express'); //menginisialisasi express
 // const {logger} = require('./utils/logger'); //mengimpor logger
 const {requestLogger} = require('./middleware/loggerMiddleware');
+const cookieParser = require('cookie-parser');
 
 const app = express(); //mengisialisasi app
 app.use(express.json()); //menggunakan middleware untuk parsing JSON
 app.use(express.urlencoded({ extended: true })); //menggunakan middleware untuk parsing URL-encoded
+app.use(cookieParser())
 
 
 // Import routes

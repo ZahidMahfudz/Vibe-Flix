@@ -1,17 +1,35 @@
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
-const JWT_SECRET = process.env.JWT_SECRET;
-const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || "1h";
+const accessSecret = process.env.ACCESS_TOKEN_SECRET || 'accesTokenVibeFlixSecret';
+const accessExpiresIn = process.env.ACCESS_TOKEN_EXPIRES_IN || '15m';
+const refreshSecret = process.env.REFRESH_TOKEN_SECRET || 'refreshTokenVibeFlixSecret';
+const refreshExpiresIn = process.env.REFRESH_TOKEN_EXPIRES_IN || '7d';
 
 // Generate token
-function generateToken(payload) {
-  return jwt.sign(payload, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
+function generateAccessToken(payload) {
+  return jwt.sign(payload, accessSecret, { expiresIn: accessExpiresIn });
+}
+
+function generateRefreshToken(payload) {
+  return jwt.sign(payload, refreshSecret, { expiresIn: refreshExpiresIn });
 }
 
 // Verify token
-function verifyToken(token) {
-  return jwt.verify(token, JWT_SECRET);
+function verifyAccessToken(token) {
+  try {
+    return jwt.verify(token, accessSecret);
+  } catch (err) {
+    throw new Error('Invalid or expired access token');
+  }
 }
 
-module.exports = { generateToken, verifyToken };
+function verifyRefreshToken(token) {
+  try {
+    return jwt.verify(token, refreshSecret);
+  } catch (err) {
+    throw new Error('Invalid or expired refresh token');
+  }
+}
+
+module.exports = { generateAccessToken, generateRefreshToken, verifyAccessToken, verifyRefreshToken };
