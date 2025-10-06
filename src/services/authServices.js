@@ -1,6 +1,6 @@
 const {prisma} = require("../config/db");
 const bcrypt = require("bcrypt");
-const { generateAccessToken, generateRefreshToken } = require("../utils/jwt");
+const { generateAccessToken, generateRefreshToken, verifyRefreshToken } = require("../utils/jwt");
 const logger = require('../utils/logger');
 const { generateUserId, generateRefreshTokenId } = require("../utils/idGenerator");
 
