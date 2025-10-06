@@ -2,7 +2,7 @@ const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
 const accessSecret = process.env.ACCESS_TOKEN_SECRET || 'accesTokenVibeFlixSecret';
-const accessExpiresIn = process.env.ACCESS_TOKEN_EXPIRES_IN || '15m';
+const accessExpiresIn = process.env.ACCESS_TOKEN_EXPIRES_IN || '1m';
 const refreshSecret = process.env.REFRESH_TOKEN_SECRET || 'refreshTokenVibeFlixSecret';
 const refreshExpiresIn = process.env.REFRESH_TOKEN_EXPIRES_IN || '7d';
 
