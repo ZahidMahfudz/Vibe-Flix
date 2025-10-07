@@ -153,4 +153,65 @@ async function register(name, email, password, role = "USER") {
   return user;
 }
 
-module.exports = { login, logout, register, refreshAccessToken };
+async function googleAuthService(googleUserData){
+  logger.debug(`memasuki googleAuthService`)
+
+  const {email, name} = googleUserData
+
+  let user = await prisma.user.findUnique({ where: { email } });
+
+  if(!user){
+    user = await prisma.user.create({
+      data:{
+        id_user: generateUserId(),
+        email,
+        name,
+        password : null,
+        role : "USER",
+      }
+    })
+    logger.info(`User baru dibuat dari Google OAuth: ${email}`);
+  } else {
+    logger.info(`User login dengan Google: ${email}`);
+  }
+
+  // Membuat payload untuk token
+    logger.debug(`membuat json userData sebagai payload token`);
+    const userData = {
+      id_user: user.id_user,
+      name: user.name,
+      email: user.email,
+      role: user.role
+    };
+
+    logger.debug(`payload token : ${JSON.stringify(userData)}`);
+    logger.debug(`melakukan generate access token menggunakan payload di atas`);
+    const accessToken = generateAccessToken(userData);
+    logger.debug(`access token berhasil digenerate : ${accessToken}`);
+    logger.debug(`melakukan generate refresh token menggunakan payload di atas`);
+    const refreshToken = generateRefreshToken(userData);
+    logger.debug(`refresh token berhasil digenerate : ${refreshToken}`);
+
+    // Simpan refresh token ke database
+    logger.debug(`menyimpan refresh token kedalam database`);
+
+    const expiresInDays = parseInt(process.env.REFRESH_TOKEN_EXPIRES_IN) || 7;
+    const expiresAt = new Date(Date.now() + expiresInDays * 24 * 60 * 60 * 1000);
+
+    await prisma.refreshToken.create({
+      data: {
+        id_refresh_token: generateRefreshTokenId(),
+        tokenHash: refreshToken,
+        userId: userData.id_user,
+        expiresAt: expiresAt
+      }
+    });
+
+    logger.debug(`berhasil menyimpan refresh Token kedalam database`);
+    logger.debug(`autentikasi ${user.email} berhasil`);
+    logger.debug(`mengembalikan token dan data user kecuali password ke controller`);
+
+    return { userData, token: { accessToken, refreshToken } };
+}
+
+module.exports = { login, logout, register, refreshAccessToken, googleAuthService };

@@ -5,12 +5,17 @@ const authenticate = require("../middleware/authMiddleware")
 const validator = require("../validator/authValidator");
 const validate = require("../middleware/validate");
 const logger = require('../middleware/loggerMiddleware'); //dipakai untuk logging request hanya untuk pada file ini saja
+const { authorizationUrl } = require("../config/google");
 
 // Auth
 router.post("/register", logger.requestLogger, validator.registerValidator, validate, authController.register);
 router.post("/login", logger.requestLogger , validator.loginValidator, validate, authController.login);
 router.post("/logout", logger.requestLogger, authenticate.authenticateAccessToken, authController.logout)
 router.post("/refresh-token", logger.requestLogger, authenticate.authenticateRefreshToken, authController.refreshToken)
+
+//google auth
+router.get("/google", logger.requestLogger, authController.googleLogin)
+router.get("/google/callback", logger.requestLogger, authController.googleCallback)
 
 // Protected route (hanya user login)
 router.get("/profile", authenticate.authenticateAccessToken, authenticate.authorizeRole("USER"), (req, res) => {
