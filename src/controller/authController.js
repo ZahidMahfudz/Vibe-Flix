@@ -142,6 +142,13 @@ async function googleCallback(req, res){
   try {
     const {code} = req.query
 
+    if (!code) {
+      logger?.error("Kode otorisasi Google tidak ditemukan");
+      return res.status(400).json({
+        error: "Kode otorisasi tidak ditemukan. Silakan login ulang.",
+      });
+    }
+
     logger.debug(`code query : ${code}`)
 
     const {tokens} = await oauth2Client.getToken(code)
@@ -163,8 +170,27 @@ async function googleCallback(req, res){
       token : result.token
     })
   } catch (error) {
-    logger.error(`Google callback gagal: ${error.message}`);
-    res.status(500).json({ message: error.message });
+    logger?.error(`Google callback gagal: ${error.message}`);
+
+    // Tangani error "invalid_grant"
+    if (error.message.includes("invalid_grant")) {
+      return res.status(400).json({
+        error:
+          "Kode otorisasi sudah kadaluarsa atau pernah digunakan. Silakan login ulang.",
+      });
+    }
+
+    // Tangani error "unauthorized_client"
+    if (error.message.includes("unauthorized_client")) {
+      return res.status(400).json({
+        error: "Konfigurasi Google Client salah. Periksa Client ID dan Secret.",
+      });
+    }
+
+    // Error umum lainnya
+    return res.status(500).json({
+      error: "Terjadi kesalahan saat autentikasi dengan Google.",
+    });
   }
 }
 
