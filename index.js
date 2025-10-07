@@ -11,7 +11,7 @@ if (process.env.NODE_ENV === "production") {
 }
 
 logger.info(`Environment: ${process.env.NODE_ENV === "production" ? "Production" : "Development"}`);
-logger.info(`Using config file: ${process.env.NODE_ENV === "production" ? ".env.production" : ".env"}`);
+logger.info(`Using config file: ${process.env.NODE_ENV === "production" ? "vercel environtment" : ".env"}`);
 connectDB();
 
 //load app

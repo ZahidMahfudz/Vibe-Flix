@@ -1,5 +1,9 @@
 const logger = require('../utils/logger')
 const authService = require("../services/authServices");
+const { oauth2Client, authorizationUrl } = require('../config/google');
+const {google} = require('googleapis')
+const { prisma } = require('../config/db');
+const { generateUserId } = require('../utils/idGenerator');
 
 async function login(req, res) {
   try {
@@ -124,4 +128,44 @@ async function register(req, res) {
   }
 }
 
-module.exports = { login, logout, register, refreshToken };
+async function googleLogin(req, res) {
+  try {
+    logger.debug('masuk ke controller google login')
+    res.redirect(authorizationUrl);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+    logger.error(`Google login gagal: ${error.message}`);
+  }
+}
+
+async function googleCallback(req, res){
+  try {
+    const {code} = req.query
+
+    logger.debug(`code query : ${code}`)
+
+    const {tokens} = await oauth2Client.getToken(code)
+    oauth2Client.setCredentials(tokens)
+
+    const oauth2 = google.oauth2({
+      auth : oauth2Client,
+      version : 'v2'
+    })
+
+    const {data: googleUserData} = await oauth2.userinfo.get();
+    logger.debug(`Google user data: ${JSON.stringify(googleUserData)}`);
+
+    const result = await authService.googleAuthService(googleUserData)
+    
+    res.status(200).json({
+      massage : "Login Google Auth Success",
+      userData : result.userData,
+      token : result.token
+    })
+  } catch (error) {
+    logger.error(`Google callback gagal: ${error.message}`);
+    res.status(500).json({ message: error.message });
+  }
+}
+
+module.exports = { login, logout, register, refreshToken, googleLogin, googleCallback };
